@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import clsx from 'clsx';
 import { withStyles, WithStyles, createStyles, Theme, emphasize } from '@material-ui/core/styles';
-import Collapse from '@material-ui/core/Collapse';
+import Collapse, { CollapseClassKey } from '@material-ui/core/Collapse';
 import SnackbarContent from '../SnackbarContent';
 import { getTransitionDirection } from './SnackbarItem.util';
 import { allClasses, REASONS, objectMerge, DEFAULTS, transformer } from '../utils/constants';
-import { SharedProps, RequiredBy, TransitionHandlerProps, SnackbarProviderProps as ProviderProps } from '../index';
+import { SharedProps, RequiredBy, TransitionHandlerProps, SnackbarProviderProps as ProviderProps, ClassNameMap } from '../index';
 import defaultIconVariants from '../utils/defaultIconVariants';
 import createChainedFunction from '../utils/createChainedFunction';
 import { Snack } from '../SnackbarProvider';
@@ -65,6 +65,16 @@ const styles = (theme: Theme) => {
             bottom: 0,
             left: 0,
         },
+        collapseContainer: {
+            pointerEvents: 'all',
+        },
+        collapseWrapper: {
+            padding: `${SNACKBAR_INDENTS.snackbar.default}px 0px`,
+            transition: 'padding 300ms ease 0ms',
+        },
+        collapseWrapperDense: {
+            padding: `${SNACKBAR_INDENTS.snackbar.dense}px 0px`,
+        },
     });
 }
 
@@ -75,15 +85,19 @@ type RemovedProps =
     | 'autoHideDuration' // same as above
     | 'preventDuplicate' // the one recevied from enqueueSnackbar is processed in provider, therefore shouldn't be passed to SnackbarItem */
 
+type CollapseProps = {
+  classes: Partial<ClassNameMap<CollapseClassKey>>;
+};
 
 export interface SnackbarItemProps extends WithStyles<typeof styles>, RequiredBy<Omit<SharedProps, RemovedProps>, 'onEntered' | 'onExited' | 'onClose'> {
     snack: Snack;
     dense: ProviderProps['dense'];
     iconVariant: ProviderProps['iconVariant'];
     hideIconVariant: ProviderProps['hideIconVariant'];
+    CollapseProps: CollapseProps;
 }
 
-const SnackbarItem: React.FC<SnackbarItemProps> = ({ classes, ...props }) => {
+const SnackbarItem: React.FC<SnackbarItemProps> = ({ classes, dense, ...props }) => {
     const timeout = useRef<ReturnType<typeof setTimeout>>();
     const [collapsed, setCollapsed] = useState(true);
 
@@ -109,7 +123,6 @@ const SnackbarItem: React.FC<SnackbarItemProps> = ({ classes, ...props }) => {
 
     const {
         style,
-        dense,
         ariaAttributes: otherAriaAttributes,
         className: otherClassName,
         hideIconVariant,
@@ -194,6 +207,13 @@ const SnackbarItem: React.FC<SnackbarItemProps> = ({ classes, ...props }) => {
             timeout={175}
             in={collapsed}
             onExited={callbacks.onExited}
+            classes={{
+                container: classes.collapseContainer,
+                wrapper: clsx(
+                    classes.collapseWrapper,
+                    dense && classes.collapseWrapperDense,
+                ),
+            }}
         >
             {/* @ts-ignore */}
             <Snackbar
