@@ -88,7 +88,7 @@ var allClasses = {
 var MESSAGES = {
   NO_PERSIST_ALL: 'WARNING - notistack: Reached maxSnack while all enqueued snackbars have \'persist\' flag. Notistack will dismiss the oldest snackbar anyway to allow other ones in the queue to be presented.'
 };
-var SNACKBAR_INDENTS$1 = {
+var SNACKBAR_INDENTS = {
   view: {
     "default": 20,
     dense: 4
@@ -583,7 +583,7 @@ var SnackbarItem = function SnackbarItem(_ref) {
     "in": collapsed,
     onExited: callbacks.onExited,
     classes: {
-      container: classes.collapseContainer,
+      root: classes.collapseContainer,
       wrapper: clsx(classes.collapseWrapper, dense && classes.collapseWrapperDense)
     }
   }, React__default.createElement(Snackbar, Object.assign({}, other, singleSnackProps, {
@@ -633,28 +633,28 @@ var useStyle = /*#__PURE__*/makeStyles(function (theme) {
       transition: 'top 300ms ease 0ms, right 300ms ease 0ms, bottom 300ms ease 0ms, left 300ms ease 0ms, margin 300ms ease 0ms, max-width 300ms ease 0ms',
       // container itself is invisible and should not block clicks, clicks should be passed to its children
       pointerEvents: 'none',
-      maxWidth: "calc(100% - " + SNACKBAR_INDENTS$1.view["default"] * 2 + "px)"
+      maxWidth: "calc(100% - " + SNACKBAR_INDENTS.view["default"] * 2 + "px)"
     }, _root[theme.breakpoints.down('xs')] = {
       width: '100%',
       maxWidth: "calc(100% - " + xsWidthMargin * 2 + "px)"
     }, _root),
     top: {
-      top: SNACKBAR_INDENTS$1.view["default"] - SNACKBAR_INDENTS$1.snackbar["default"],
+      top: SNACKBAR_INDENTS.view["default"] - SNACKBAR_INDENTS.snackbar["default"],
       flexDirection: 'column'
     },
     bottom: {
-      bottom: SNACKBAR_INDENTS$1.view["default"] - SNACKBAR_INDENTS$1.snackbar["default"],
+      bottom: SNACKBAR_INDENTS.view["default"] - SNACKBAR_INDENTS.snackbar["default"],
       flexDirection: 'column-reverse'
     },
     left: (_left = {
-      left: SNACKBAR_INDENTS$1.view["default"]
+      left: SNACKBAR_INDENTS.view["default"]
     }, _left[theme.breakpoints.up('sm')] = {
       alignItems: 'flex-start'
     }, _left[theme.breakpoints.down('xs')] = {
       left: xsWidthMargin + "px"
     }, _left),
     right: (_right = {
-      right: SNACKBAR_INDENTS$1.view["default"]
+      right: SNACKBAR_INDENTS.view["default"]
     }, _right[theme.breakpoints.up('sm')] = {
       alignItems: 'flex-end'
     }, _right[theme.breakpoints.down('xs')] = {
